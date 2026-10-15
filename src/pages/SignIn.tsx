@@ -10,6 +10,7 @@ export default function SignIn() {
   const { signIn, reset } = useStore();
   const navigate = useNavigate();
   const [clientId, setClientId] = useState(CLIENTS[0].id);
+  const [confirming, setConfirming] = useState(false);
   const featured = ['lotus-bay-interiors', 'copperleaf-foods', 'saffron-table-restaurants'].map((id) => CLIENTS.find((c) => c.id === id)!);
 
   return (
@@ -51,7 +52,15 @@ export default function SignIn() {
             <button className="btn primary" onClick={() => { signIn({ kind: 'client', clientId }); navigate(`/client/${clientId}`); }}>Open as owner</button>
           </div>
         </div>
-        <button className="btn ghost small" style={{ alignSelf: 'flex-start' }} onClick={() => { if (confirm('Reset all demo changes made in this browser?')) reset(); }}>Reset demo data</button>
+        {confirming ? (
+          <div className="row small">
+            <span>Undo every demo change made in this browser?</span>
+            <button className="btn small" onClick={() => { reset(); setConfirming(false); }}>Reset</button>
+            <button className="btn ghost small" onClick={() => setConfirming(false)}>Keep</button>
+          </div>
+        ) : (
+          <button className="btn ghost small" style={{ alignSelf: 'flex-start' }} onClick={() => setConfirming(true)}>Reset demo data</button>
+        )}
       </div>
     </div>
   );
